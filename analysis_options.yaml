@@ -1,0 +1,24 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+  errors:
+    # Treat missing return as error, not warning
+    missing_return: error
+
+linter:
+  rules:
+    # Enforce package imports for clarity
+    always_use_package_imports: true
+    # Prefer single quotes for consistency
+    prefer_single_quotes: true
+    # Require DartDoc on all public APIs
+    public_member_api_docs: true
+    # Disallow dynamic
+    avoid_dynamic_calls: true
+    # Enforce const where possible
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
