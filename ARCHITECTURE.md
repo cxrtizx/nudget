@@ -10,9 +10,7 @@ the learning effort on what is genuinely new: the reactive widget model and nati
 
 Flutter was chosen over .NET MAUI intentionally. MAUI would have been the natural extension of the existing
 stack but would not demonstrate technological adaptability. Flutter currently leads the cross-platform mobile
-market with 46% share and is backed by Google with a mature ecosystem. Flutter developers are in high demand
-and command a salary premium due to talent scarcity, making it a strategically stronger portfolio differentiator.
-
+market with 46% share and is backed by Google with a mature ecosystem.
 ---
 
 ## Folder Structure
