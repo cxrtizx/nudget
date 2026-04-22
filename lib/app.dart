@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nudget/l10n/app_localizations.dart';
+import 'package:nudget/providers/locale_provider.dart';
 import 'package:nudget/providers/notification_providers.dart';
 import 'package:nudget/routes.dart';
 import 'package:nudget/ui/theme/app_theme.dart';
@@ -9,8 +11,9 @@ import 'package:nudget/ui/theme/app_theme.dart';
 /// Root application widget.
 ///
 /// Responsibilities beyond routing and theming:
-/// - Activates [notificationPipelineProvider] so the stream subscription is
-///   kept alive for the entire app lifetime.
+/// - Wires up the three supported locales (EN / ES / GL) and a persisted
+///   locale preference via [localeProvider].
+/// - Activates [notificationPipelineProvider] for the entire app lifetime.
 /// - Requests notification-read permission on first launch (Android only).
 class NudgetApp extends ConsumerStatefulWidget {
   /// Creates a [NudgetApp].
@@ -24,15 +27,16 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
   @override
   void initState() {
     super.initState();
-    // Defer startup work until after the first frame so context is valid.
     WidgetsBinding.instance.addPostFrameCallback((_) => _startup());
   }
 
   @override
   Widget build(BuildContext context) {
-    // Watching the pipeline provider here ensures the subscription is created
-    // immediately and stays alive as long as NudgetApp is in the tree.
+    // Keep the notification pipeline alive for the whole app lifetime.
     ref.watch(notificationPipelineProvider);
+
+    // Read the persisted locale; null means "follow the system".
+    final locale = ref.watch(localeProvider).whenOrNull(data: (l) => l);
 
     return MaterialApp.router(
       title: 'Nudget',
@@ -40,6 +44,16 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
       darkTheme: AppTheme.darkTheme,
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
+      // ── Localisation wiring ────────────────────────────────────────────
+      // localizationsDelegates tells Flutter how to load our translations
+      // plus the ones built into Material/Cupertino widgets.
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // supportedLocales is the list the OS picks from when choosing the
+      // best match for the device language.
+      supportedLocales: AppLocalizations.supportedLocales,
+      // When locale is null Flutter automatically matches the device OS
+      // language to a supported one; when non-null the user override wins.
+      locale: locale,
     );
   }
 
@@ -58,7 +72,6 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
       return;
     }
 
-    // No permission yet — show a dialog and, if accepted, open system settings.
     if (!mounted) return;
     final accepted = await showDialog<bool>(
       context: context,
@@ -68,7 +81,6 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
 
     if (accepted ?? false) {
       await listener.requestPermission();
-      // Re-check after the user returns from system settings.
       if (await listener.hasPermission()) {
         await listener.startListening();
       }
@@ -77,7 +89,7 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
 }
 
 // ---------------------------------------------------------------------------
-// Permission dialog
+// Permission dialog — uses l10n once the widget tree has Localizations
 // ---------------------------------------------------------------------------
 
 class _NotificationPermissionDialog extends StatelessWidget {
@@ -86,27 +98,23 @@ class _NotificationPermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
       icon: Icon(
         Icons.notifications_active_outlined,
         size: 40,
         color: theme.colorScheme.primary,
       ),
-      title: const Text('Notification access'),
-      content: const Text(
-        'Nudget reads your payment notifications to log expenses '
-        'automatically. Grant "Notification access" in the next screen '
-        'to enable this feature.\n\n'
-        'You can still add expenses manually without this permission.',
-      ),
+      title: Text(l10n.notificationAccessTitle),
+      content: Text(l10n.notificationAccessContent),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Not now'),
+          child: Text(l10n.notNow),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
-          child: const Text('Allow'),
+          child: Text(l10n.allow),
         ),
       ],
     );

@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # State management & DI
   flutter_riverpod: ^2.6.1
@@ -33,7 +35,10 @@ dependencies:
 
   # Utilities
   uuid: ^4.4.0
-  intl: ^0.19.0
+  intl: ^0.20.2
+
+  # Preferences (persists the user-chosen locale)
+  shared_preferences: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -53,3 +58,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Activates flutter gen-l10n; reads l10n.yaml for configuration.
+  generate: true

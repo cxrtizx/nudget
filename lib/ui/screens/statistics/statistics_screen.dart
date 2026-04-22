@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nudget/core/models/category.dart';
 import 'package:nudget/core/models/expense.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/dashboard_providers.dart';
 import 'package:nudget/providers/statistics_providers.dart';
+import 'package:nudget/ui/widgets/language_selector_dialog.dart';
 
 /// Displays a month-over-month bar chart for the last six months and a
 /// per-category spending breakdown for the selected month.
@@ -29,19 +31,29 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     final categories =
         ref.watch(categoryListProvider).whenOrNull(data: (c) => c) ??
             <Category>[];
+    final l10n = context.l10n;
 
     final selected = months[_selectedIndex];
     final breakdown = _computeBreakdown(selected.expenses, categories);
     final top3 = breakdown.take(3).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Statistics')),
+      appBar: AppBar(
+        title: Text(l10n.statisticsTitle),
+        actions: [
+          // Language selector — accessible from here as a settings-like action.
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: l10n.language,
+            onPressed: () => showLanguageSelectorSheet(context),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
         children: [
-          // ── 6-month bar chart ─────────────────────────────────────────────
           Text(
-            'Last 6 months',
+            l10n.last6Months,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -59,14 +71,12 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
           ),
           const SizedBox(height: 20),
 
-          // ── Selected month summary ────────────────────────────────────────
           _MonthHeader(summary: selected),
           const SizedBox(height: 16),
 
-          // ── Top 3 categories ─────────────────────────────────────────────
           if (top3.isNotEmpty) ...[
             Text(
-              'Top categories',
+              l10n.topCategories,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -76,10 +86,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
             const SizedBox(height: 20),
           ],
 
-          // ── Full category breakdown ───────────────────────────────────────
           if (breakdown.isNotEmpty) ...[
             Text(
-              'Category breakdown',
+              l10n.categoryBreakdown,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -95,8 +104,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     );
   }
 
-  /// Groups [expenses] by category and returns items sorted by total
-  /// descending.
   List<CategorySpendingData> _computeBreakdown(
     List<Expense> expenses,
     List<Category> categories,
@@ -149,17 +156,17 @@ class _SixMonthBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final maxY = months
         .map((m) => m.total)
         .fold<double>(0, (prev, t) => t > prev ? t : prev);
 
-    // Show a placeholder when there are no expenses at all.
     if (maxY == 0) {
       return SizedBox(
         height: 180,
         child: Center(
           child: Text(
-            'No spending data for the last 6 months',
+            l10n.noSpendingData,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -274,6 +281,7 @@ class _MonthHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final monthLabel = DateFormat('MMMM yyyy').format(
       DateTime(summary.year, summary.month),
     );
@@ -298,9 +306,10 @@ class _MonthHeader extends StatelessWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
+            // expenseCount uses ICU plural rules: "1 expense" vs "3 expenses"
+            // (or the locale-correct equivalent in ES/GL).
             Text(
-              '${summary.expenses.length} expense'
-              '${summary.expenses.length == 1 ? '' : 's'}',
+              l10n.expenseCount(summary.expenses.length),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -340,8 +349,7 @@ class _Top3Section extends StatelessWidget {
             subtitle: LinearProgressIndicator(
               value: item.percentage / 100,
               color: item.category.color,
-              backgroundColor:
-                  item.category.color.withAlpha(38),
+              backgroundColor: item.category.color.withAlpha(38),
               borderRadius: BorderRadius.circular(4),
               minHeight: 6,
             ),
@@ -458,6 +466,7 @@ class _EmptyMonthView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32),
       child: Column(
@@ -469,7 +478,7 @@ class _EmptyMonthView extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'No expenses recorded this month.',
+            l10n.noExpensesThisMonth,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),

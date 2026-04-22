@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/expense_providers.dart';
 import 'package:nudget/ui/screens/categories/create_edit_category_sheet.dart';
@@ -13,10 +14,11 @@ class CategoriesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categoriesAsync = ref.watch(categoryListProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Categories'),
+        title: Text(l10n.navCategories),
       ),
       body: categoriesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -61,7 +63,7 @@ class CategoriesScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showCreateEditCategorySheet(context),
         icon: const Icon(Icons.add),
-        label: const Text('Add category'),
+        label: Text(l10n.addCategory),
       ),
     );
   }
@@ -73,15 +75,13 @@ class CategoriesScreen extends ConsumerWidget {
   ) async {
     try {
       await ref.read(categoryListProvider.notifier).remove(id);
-      // Expenses referencing this category are SET NULL by the FK cascade;
-      // refresh both providers so the UI reflects the change.
       await ref.read(expenseListProvider.notifier).refresh();
       await ref.read(unclassifiedExpensesProvider.notifier).refresh();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete category: $e'),
+            content: Text(context.l10n.failedToDeleteCategory(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -100,6 +100,7 @@ class _EmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -111,14 +112,14 @@ class _EmptyView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'No categories yet',
+            l10n.noCategories,
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap + to create your first category.',
+            l10n.tapToCreateCategory,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.outlineVariant,
             ),
@@ -136,17 +137,21 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline,
-                size: 48, color: theme.colorScheme.error),
+            Icon(
+              Icons.error_outline,
+              size: 48,
+              color: theme.colorScheme.error,
+            ),
             const SizedBox(height: 12),
             Text(
-              'Could not load categories',
+              l10n.couldNotLoadCategories,
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

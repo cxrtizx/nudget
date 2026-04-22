@@ -1,0 +1,7 @@
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+# synthetic-package: false places the generated file inside lib/l10n so you
+# can read it, import it with the normal package: URI, and commit it to git.
+output-dir: lib/l10n
+synthetic-package: false

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nudget/core/models/category.dart';
 import 'package:nudget/core/models/expense.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/expense_providers.dart';
 import 'package:nudget/ui/screens/expenses/expense_detail_sheet.dart';
@@ -54,15 +55,16 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
     final categoriesAsync = ref.watch(categoryListProvider);
     final categories =
         categoriesAsync.whenOrNull(data: (c) => c) ?? <Category>[];
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expenses'),
+        title: Text(l10n.navExpenses),
         actions: [
           if (_dateRange != null || _selectedCategoryId != null)
             IconButton(
               icon: const Icon(Icons.filter_alt_off_outlined),
-              tooltip: 'Clear filters',
+              tooltip: l10n.clearFilters,
               onPressed: () => setState(() {
                 _selectedCategoryId = null;
                 _dateRange = null;
@@ -70,21 +72,19 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
             ),
           IconButton(
             icon: const Icon(Icons.date_range_outlined),
-            tooltip: 'Filter by date',
+            tooltip: l10n.filterByDate,
             onPressed: () => _pickDateRange(context),
           ),
         ],
       ),
       body: Column(
         children: [
-          // Active filter indicator
           if (_dateRange != null)
             _DateRangeBanner(
               range: _dateRange!,
               onClear: () => setState(() => _dateRange = null),
             ),
 
-          // Category filter chips
           if (categories.isNotEmpty)
             _CategoryFilterBar(
               categories: categories,
@@ -93,7 +93,6 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
                   setState(() => _selectedCategoryId = id),
             ),
 
-          // Expense list
           Expanded(
             child: expensesAsync.when(
               loading: () =>
@@ -143,7 +142,6 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
       firstDate: DateTime(now.year - 3),
       lastDate: now,
       initialDateRange: _dateRange,
-      helpText: 'Filter by date range',
     );
     if (picked != null) setState(() => _dateRange = picked);
   }
@@ -160,7 +158,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete: $e'),
+            content: Text(context.l10n.failedToDelete(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -212,22 +210,23 @@ class _DismissibleExpenseRow extends StatelessWidget {
   }
 
   Future<bool> _confirmDelete(BuildContext context) async {
+    final l10n = context.l10n;
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete expense?'),
-        content: const Text('This action cannot be undone.'),
+        title: Text(l10n.deleteExpenseTitle),
+        content: Text(l10n.cannotBeUndone),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(ctx).colorScheme.error,
             ),
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -249,6 +248,7 @@ class _CategoryFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SizedBox(
       height: 48,
       child: ListView(
@@ -258,7 +258,7 @@ class _CategoryFilterBar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: FilterChip(
-              label: const Text('All'),
+              label: Text(l10n.allFilter),
               selected: selectedId == null,
               onSelected: (_) => onSelected(null),
             ),
@@ -336,6 +336,7 @@ class _EmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -349,7 +350,7 @@ class _EmptyView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            isFiltered ? 'No expenses match the filter' : 'No expenses yet',
+            isFiltered ? l10n.noExpensesMatchFilter : l10n.noExpensesYet,
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -357,7 +358,7 @@ class _EmptyView extends StatelessWidget {
           if (isFiltered) ...[
             const SizedBox(height: 8),
             Text(
-              'Try adjusting the category or date range.',
+              l10n.tryAdjustingFilter,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.outlineVariant,
               ),
@@ -377,6 +378,7 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -385,7 +387,10 @@ class _ErrorView extends StatelessWidget {
           children: [
             Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 12),
-            Text('Could not load expenses', style: theme.textTheme.titleMedium),
+            Text(
+              l10n.couldNotLoadExpenses,
+              style: theme.textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             Text(
               message,

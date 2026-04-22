@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nudget/core/models/expense.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/dashboard_providers.dart';
 import 'package:nudget/providers/expense_providers.dart';
 import 'package:nudget/providers/period_filter_provider.dart';
 import 'package:nudget/routes.dart';
+import 'package:nudget/ui/widgets/all_expenses_sheet.dart';
 import 'package:nudget/ui/widgets/bar_chart_widget.dart';
 import 'package:nudget/ui/widgets/expense_list_item.dart';
 import 'package:nudget/ui/widgets/period_selector.dart';
@@ -34,6 +36,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final categoryData = ref.watch(categorySpendingProvider);
     final monthlyData = ref.watch(monthlyTotalsProvider);
     final recentExpenses = ref.watch(recentExpensesProvider);
+    final l10n = context.l10n;
 
     final filteredExpenses = _highlightedCategoryId != null
         ? recentExpenses
@@ -43,18 +46,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nudget'),
+        title: Text(l10n.appTitle),
         actions: [
           if (pendingCount > 0)
             Badge.count(
               count: pendingCount,
               child: IconButton(
                 icon: const Icon(Icons.pending_actions_outlined),
-                tooltip: 'Pending classification',
+                tooltip: l10n.pendingClassificationTooltip,
                 onPressed: () => context.push(kRoutePending),
               ),
             ),
-          const SizedBox(width: 8),
         ],
       ),
       body: RefreshIndicator(
@@ -116,6 +118,7 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -126,7 +129,12 @@ class _SummaryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Spent this ${period.label.toLowerCase()}',
+                    // spentThisPeriod takes the period name as a parameter so
+                    // the sentence is translated as a whole unit — not
+                    // assembled from fragments, which breaks in many languages.
+                    l10n.spentThisPeriod(
+                      period.localizedLabel(l10n).toLowerCase(),
+                    ),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -165,6 +173,7 @@ class _RecentExpensesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,13 +182,13 @@ class _RecentExpensesSection extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              isFiltered ? 'Filtered expenses' : 'Recent expenses',
+              isFiltered ? l10n.filteredExpenses : l10n.recentExpenses,
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w600),
             ),
             TextButton(
-              onPressed: () => context.push(kRouteExpenses),
-              child: const Text('See all'),
+              onPressed: () => showAllExpensesSheet(context),
+              child: Text(l10n.seeAll),
             ),
           ],
         ),
@@ -188,7 +197,7 @@ class _RecentExpensesSection extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Center(
               child: Text(
-                'No expenses yet',
+                l10n.noExpensesYet,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

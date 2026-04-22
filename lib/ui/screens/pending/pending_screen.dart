@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nudget/core/models/category.dart';
 import 'package:nudget/core/models/expense.dart';
 import 'package:nudget/core/utils/category_icon_mapper.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/classification_service_provider.dart';
 import 'package:nudget/providers/expense_providers.dart';
@@ -33,10 +34,11 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
     final categories =
         ref.watch(categoryListProvider).whenOrNull(data: (c) => c) ??
             <Category>[];
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pending Classification'),
+        title: Text(l10n.pendingClassification),
       ),
       body: expensesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -80,7 +82,6 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
     try {
       final shouldCreateRule = _createRule[expense.id] ?? false;
 
-      // Assign category to this expense.
       await ref.read(expenseListProvider.notifier).edit(
             expense.copyWith(
               categoryId: categoryId,
@@ -89,7 +90,6 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
           );
 
       if (shouldCreateRule) {
-        // Create rule and retroactively apply to other unclassified expenses.
         await ref
             .read(classificationServiceProvider)
             .createRuleFromDescription(
@@ -105,7 +105,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to classify: $e'),
+            content: Text(context.l10n.failedToClassify(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -144,6 +144,7 @@ class _PendingExpenseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Card(
       child: Padding(
@@ -151,7 +152,6 @@ class _PendingExpenseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Amount + source row
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -186,7 +186,6 @@ class _PendingExpenseCard extends StatelessWidget {
               ],
             ),
 
-            // Original notification text
             if (expense.rawNotificationText.isNotEmpty) ...[
               const SizedBox(height: 8),
               Container(
@@ -212,14 +211,12 @@ class _PendingExpenseCard extends StatelessWidget {
             const Divider(height: 1),
             const SizedBox(height: 12),
 
-            // Category selector
             _CategorySelector(
               categories: categories,
               selectedId: selectedCategoryId,
               onChanged: onCategoryChanged,
             ),
 
-            // Rule toggle (only when a category is selected)
             if (selectedCategoryId != null) ...[
               const SizedBox(height: 8),
               _RuleToggle(
@@ -230,7 +227,6 @@ class _PendingExpenseCard extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Classify button
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
@@ -246,8 +242,8 @@ class _PendingExpenseCard extends StatelessWidget {
                     : const Icon(Icons.check_circle_outline),
                 label: Text(
                   createRule && selectedCategoryId != null
-                      ? 'Classify & save rule'
-                      : 'Classify',
+                      ? l10n.classifyAndSaveRule
+                      : l10n.classify,
                 ),
                 onPressed:
                     (isProcessing || selectedCategoryId == null)
@@ -280,11 +276,12 @@ class _CategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Assign category',
+          l10n.assignCategory,
           style: theme.textTheme.labelLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -333,6 +330,7 @@ class _RuleToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () => onChanged(!value),
@@ -347,12 +345,11 @@ class _RuleToggle extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Remember for similar expenses',
+                    l10n.rememberForSimilar,
                     style: theme.textTheme.bodyMedium,
                   ),
                   Text(
-                    'Creates a rule to auto-classify future expenses '
-                    'from the same source.',
+                    l10n.rememberForSimilarDesc,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -377,6 +374,7 @@ class _EmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -388,14 +386,14 @@ class _EmptyView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'All caught up!',
+            l10n.allCaughtUp,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'No expenses waiting to be classified.',
+            l10n.noPendingExpenses,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -414,6 +412,7 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -427,7 +426,7 @@ class _ErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Could not load pending expenses',
+              l10n.couldNotLoadPendingExpenses,
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

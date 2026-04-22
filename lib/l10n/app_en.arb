@@ -1,0 +1,137 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Nudget",
+
+  "navHome": "Home",
+  "navExpenses": "Expenses",
+  "navCategories": "Categories",
+  "navStatistics": "Statistics",
+
+  "periodDay": "Day",
+  "periodWeek": "Week",
+  "periodMonth": "Month",
+  "periodYear": "Year",
+
+  "spentThisPeriod": "Spent this {period}",
+  "@spentThisPeriod": {
+    "placeholders": {
+      "period": { "type": "String" }
+    }
+  },
+
+  "recentExpenses": "Recent expenses",
+  "filteredExpenses": "Filtered expenses",
+  "noExpensesYet": "No expenses yet",
+  "seeAll": "See all",
+  "allExpenses": "All expenses",
+
+  "pendingClassification": "Pending Classification",
+  "pendingClassificationTooltip": "Pending classification",
+  "allCaughtUp": "All caught up!",
+  "noPendingExpenses": "No expenses waiting to be classified.",
+
+  "deleteExpenseTitle": "Delete expense?",
+  "cannotBeUndone": "This action cannot be undone.",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "save": "Save",
+
+  "editExpense": "Edit expense",
+  "descriptionLabel": "Description",
+  "amountLabel": "Amount (€)",
+  "categoryLabel": "Category",
+  "uncategorised": "Uncategorised",
+  "dateLabel": "Date",
+  "sourceLabel": "Source",
+  "originalTextLabel": "Original text",
+  "required": "Required",
+  "enterValidAmount": "Enter a valid amount",
+
+  "assignCategory": "Assign category",
+  "rememberForSimilar": "Remember for similar expenses",
+  "rememberForSimilarDesc": "Creates a rule to auto-classify future expenses from the same source.",
+  "classifyAndSaveRule": "Classify & save rule",
+  "classify": "Classify",
+
+  "addCategory": "Add category",
+  "noCategories": "No categories yet",
+  "tapToCreateCategory": "Tap + to create your first category.",
+  "newCategory": "New category",
+  "editCategory": "Edit category",
+  "nameLabel": "Name",
+  "spendingLimitLabel": "Spending limit (€, optional)",
+  "nameHint": "e.g. Groceries",
+  "limitHint": "e.g. 300",
+  "nameRequired": "Name is required",
+  "enterPositiveNumber": "Enter a positive number",
+  "colorLabel": "Color",
+  "iconLabel": "Icon",
+  "saveChanges": "Save changes",
+  "create": "Create",
+
+  "allFilter": "All",
+  "filterByDate": "Filter by date",
+  "clearFilters": "Clear filters",
+  "noExpensesMatchFilter": "No expenses match the filter",
+  "tryAdjustingFilter": "Try adjusting the category or date range.",
+
+  "statisticsTitle": "Statistics",
+  "last6Months": "Last 6 months",
+  "topCategories": "Top categories",
+  "categoryBreakdown": "Category breakdown",
+  "noSpendingData": "No spending data for the last 6 months",
+  "noExpensesThisMonth": "No expenses recorded this month.",
+  "expenseCount": "{count, plural, =1{1 expense} other{{count} expenses}}",
+  "@expenseCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "language": "Language",
+  "languageSystem": "System default",
+  "languageEnglish": "English",
+  "languageSpanish": "Spanish",
+  "languageGalician": "Galician",
+
+  "notificationAccessTitle": "Notification access",
+  "notificationAccessContent": "Nudget reads your payment notifications to log expenses automatically. Grant \"Notification access\" in the next screen to enable this feature.\n\nYou can still add expenses manually without this permission.",
+  "notNow": "Not now",
+  "allow": "Allow",
+
+  "failedToSaveCategory": "Failed to save category: {error}",
+  "@failedToSaveCategory": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToDeleteCategory": "Failed to delete category: {error}",
+  "@failedToDeleteCategory": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToDelete": "Failed to delete: {error}",
+  "@failedToDelete": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToSave": "Failed to save: {error}",
+  "@failedToSave": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "failedToClassify": "Failed to classify: {error}",
+  "@failedToClassify": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "couldNotLoadExpenses": "Could not load expenses",
+  "couldNotLoadPendingExpenses": "Could not load pending expenses",
+  "couldNotLoadCategories": "Could not load categories"
+}

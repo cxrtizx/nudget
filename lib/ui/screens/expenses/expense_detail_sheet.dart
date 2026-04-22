@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:nudget/core/models/category.dart';
 import 'package:nudget/core/models/expense.dart';
 import 'package:nudget/core/utils/category_icon_mapper.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/expense_providers.dart';
 
@@ -66,6 +67,7 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final categoriesAsync = ref.watch(categoryListProvider);
     final categories =
         categoriesAsync.whenOrNull(data: (c) => c) ?? <Category>[];
@@ -102,32 +104,30 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Edit expense',
+                        l10n.editExpense,
                         style: theme.textTheme.titleLarge,
                       ),
                       const SizedBox(height: 20),
 
-                      // Description
                       TextFormField(
                         controller: _descController,
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.descriptionLabel,
+                          border: const OutlineInputBorder(),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         validator: (v) =>
                             (v == null || v.trim().isEmpty)
-                                ? 'Required'
+                                ? l10n.required
                                 : null,
                       ),
                       const SizedBox(height: 16),
 
-                      // Amount
                       TextFormField(
                         controller: _amountController,
-                        decoration: const InputDecoration(
-                          labelText: 'Amount (€)',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.amountLabel,
+                          border: const OutlineInputBorder(),
                           prefixText: '€ ',
                         ),
                         keyboardType: const TextInputType.numberWithOptions(
@@ -140,19 +140,18 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
                         ],
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {
-                            return 'Required';
+                            return l10n.required;
                           }
                           final parsed =
                               double.tryParse(v.replaceAll(',', '.'));
                           if (parsed == null || parsed < 0) {
-                            return 'Enter a valid amount';
+                            return l10n.enterValidAmount;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
 
-                      // Category picker
                       _CategoryDropdown(
                         categories: categories,
                         selectedId: _selectedCategoryId,
@@ -161,27 +160,25 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Read-only metadata
                       _MetaRow(
-                        label: 'Date',
+                        label: l10n.dateLabel,
                         value: DateFormat('d MMM yyyy, HH:mm')
                             .format(widget.expense.date),
                       ),
                       const SizedBox(height: 8),
                       _MetaRow(
-                        label: 'Source',
+                        label: l10n.sourceLabel,
                         value: widget.expense.notificationSource,
                       ),
                       if (widget.expense.rawNotificationText.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         _MetaRow(
-                          label: 'Original text',
+                          label: l10n.originalTextLabel,
                           value: widget.expense.rawNotificationText,
                         ),
                       ],
                       const SizedBox(height: 24),
 
-                      // Action buttons
                       Row(
                         children: [
                           Expanded(
@@ -193,7 +190,7 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
                                 ),
                               ),
                               icon: const Icon(Icons.delete_outline),
-                              label: const Text('Delete'),
+                              label: Text(l10n.delete),
                               onPressed:
                                   _isSaving ? null : _confirmDelete,
                             ),
@@ -211,7 +208,7 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
                                       ),
                                     )
                                   : const Icon(Icons.check),
-                              label: const Text('Save'),
+                              label: Text(l10n.save),
                               onPressed: _isSaving ? null : _save,
                             ),
                           ),
@@ -250,7 +247,7 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save: $e'),
+            content: Text(context.l10n.failedToSave(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -261,21 +258,23 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
   }
 
   Future<void> _confirmDelete() async {
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete expense?'),
-        content: const Text('This action cannot be undone.'),
+        title: Text(l10n.deleteExpenseTitle),
+        content: Text(l10n.cannotBeUndone),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
-            style:
-                TextButton.styleFrom(foregroundColor: ctx.colorScheme.error),
+            style: TextButton.styleFrom(
+              foregroundColor: ctx.colorScheme.error,
+            ),
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -290,7 +289,7 @@ class _ExpenseDetailSheetState extends ConsumerState<_ExpenseDetailSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete: $e'),
+            content: Text(context.l10n.failedToDelete(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -317,15 +316,16 @@ class _CategoryDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return DropdownButtonFormField<String?>(
       // ignore: deprecated_member_use
       value: selectedId,
-      decoration: const InputDecoration(
-        labelText: 'Category',
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: l10n.categoryLabel,
+        border: const OutlineInputBorder(),
       ),
       items: [
-        const DropdownMenuItem(child: Text('Uncategorised')),
+        DropdownMenuItem(child: Text(l10n.uncategorised)),
         ...categories.map(
           (c) => DropdownMenuItem(
             value: c.id,

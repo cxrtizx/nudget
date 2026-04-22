@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nudget/core/models/category.dart';
 import 'package:nudget/core/utils/category_icon_mapper.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/ui/widgets/color_picker_grid.dart';
 import 'package:nudget/ui/widgets/icon_picker_grid.dart';
@@ -60,6 +61,7 @@ class _CreateEditCategorySheetState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -89,7 +91,7 @@ class _CreateEditCategorySheetState
               child: Row(
                 children: [
                   Text(
-                    _isEditMode ? 'Edit category' : 'New category',
+                    _isEditMode ? l10n.editCategory : l10n.newCategory,
                     style: theme.textTheme.titleLarge,
                   ),
                 ],
@@ -106,29 +108,29 @@ class _CreateEditCategorySheetState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 16),
-                      _SectionLabel('Name'),
+                      _SectionLabel(l10n.nameLabel),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                          hintText: 'e.g. Groceries',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          hintText: l10n.nameHint,
+                          border: const OutlineInputBorder(),
                         ),
                         textCapitalization: TextCapitalization.words,
                         validator: (v) =>
                             (v == null || v.trim().isEmpty)
-                                ? 'Name is required'
+                                ? l10n.nameRequired
                                 : null,
                       ),
                       const SizedBox(height: 24),
-                      _SectionLabel('Spending limit (€, optional)'),
+                      _SectionLabel(l10n.spendingLimitLabel),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _limitController,
-                        decoration: const InputDecoration(
-                          hintText: 'e.g. 300',
+                        decoration: InputDecoration(
+                          hintText: l10n.limitHint,
                           prefixText: '€ ',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                         ),
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
@@ -142,13 +144,13 @@ class _CreateEditCategorySheetState
                           if (v == null || v.trim().isEmpty) return null;
                           final parsed = double.tryParse(v.trim());
                           if (parsed == null || parsed <= 0) {
-                            return 'Enter a positive number';
+                            return l10n.enterPositiveNumber;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 24),
-                      _SectionLabel('Color'),
+                      _SectionLabel(l10n.colorLabel),
                       const SizedBox(height: 12),
                       ColorPickerGrid(
                         selectedColor: _selectedColor,
@@ -156,7 +158,7 @@ class _CreateEditCategorySheetState
                             setState(() => _selectedColor = c),
                       ),
                       const SizedBox(height: 24),
-                      _SectionLabel('Icon'),
+                      _SectionLabel(l10n.iconLabel),
                       const SizedBox(height: 12),
                       IconPickerGrid(
                         selectedIconName: _selectedIcon,
@@ -179,7 +181,11 @@ class _CreateEditCategorySheetState
                                     color: Colors.white,
                                   ),
                                 )
-                              : Text(_isEditMode ? 'Save changes' : 'Create'),
+                              : Text(
+                                  _isEditMode
+                                      ? l10n.saveChanges
+                                      : l10n.create,
+                                ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -231,7 +237,7 @@ class _CreateEditCategorySheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save category: $e'),
+            content: Text(context.l10n.failedToSaveCategory(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

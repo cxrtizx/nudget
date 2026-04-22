@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/ui/screens/categories/categories_screen.dart';
 import 'package:nudget/ui/screens/dashboard/dashboard_screen.dart';
 import 'package:nudget/ui/screens/expenses/expenses_screen.dart';
@@ -86,32 +87,36 @@ class _AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tabIndex = _resolveTabIndex(location);
+    // NavigationDestination labels come from l10n so they react to locale
+    // changes without any extra state — Flutter rebuilds the widget tree
+    // whenever the inherited Localizations widget changes.
+    final l10n = context.l10n;
 
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
         selectedIndex: tabIndex,
         onDestinationSelected: (i) => context.go(_tabRoutes[i]),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l10n.navHome,
           ),
           NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
-            label: 'Expenses',
+            icon: const Icon(Icons.receipt_long_outlined),
+            selectedIcon: const Icon(Icons.receipt_long),
+            label: l10n.navExpenses,
           ),
           NavigationDestination(
-            icon: Icon(Icons.category_outlined),
-            selectedIcon: Icon(Icons.category),
-            label: 'Categories',
+            icon: const Icon(Icons.category_outlined),
+            selectedIcon: const Icon(Icons.category),
+            label: l10n.navCategories,
           ),
           NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
-            label: 'Statistics',
+            icon: const Icon(Icons.bar_chart_outlined),
+            selectedIcon: const Icon(Icons.bar_chart),
+            label: l10n.navStatistics,
           ),
         ],
       ),

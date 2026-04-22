@@ -1,0 +1,102 @@
+{
+  "@@locale": "gl",
+
+  "appTitle": "Nudget",
+
+  "navHome": "Inicio",
+  "navExpenses": "Gastos",
+  "navCategories": "Categorías",
+  "navStatistics": "Estatísticas",
+
+  "periodDay": "Día",
+  "periodWeek": "Semana",
+  "periodMonth": "Mes",
+  "periodYear": "Ano",
+
+  "spentThisPeriod": "Total: {period}",
+
+  "recentExpenses": "Gastos recentes",
+  "filteredExpenses": "Gastos filtrados",
+  "noExpensesYet": "Aínda non hai gastos",
+  "seeAll": "Ver todos",
+  "allExpenses": "Todos os gastos",
+
+  "pendingClassification": "Clasificación pendente",
+  "pendingClassificationTooltip": "Clasificación pendente",
+  "allCaughtUp": "Ao día!",
+  "noPendingExpenses": "Non hai gastos pendentes de clasificar.",
+
+  "deleteExpenseTitle": "Eliminar gasto?",
+  "cannotBeUndone": "Esta acción non se pode desfacer.",
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
+  "save": "Gardar",
+
+  "editExpense": "Editar gasto",
+  "descriptionLabel": "Descrición",
+  "amountLabel": "Importe (€)",
+  "categoryLabel": "Categoría",
+  "uncategorised": "Sen categoría",
+  "dateLabel": "Data",
+  "sourceLabel": "Orixe",
+  "originalTextLabel": "Texto orixinal",
+  "required": "Obrigatorio",
+  "enterValidAmount": "Introduce un importe válido",
+
+  "assignCategory": "Asignar categoría",
+  "rememberForSimilar": "Lembrar para gastos similares",
+  "rememberForSimilarDesc": "Crea unha regra para clasificar automaticamente gastos futuros da mesma orixe.",
+  "classifyAndSaveRule": "Clasificar e gardar regra",
+  "classify": "Clasificar",
+
+  "addCategory": "Engadir categoría",
+  "noCategories": "Aínda non hai categorías",
+  "tapToCreateCategory": "Toca + para crear a túa primeira categoría.",
+  "newCategory": "Nova categoría",
+  "editCategory": "Editar categoría",
+  "nameLabel": "Nome",
+  "spendingLimitLabel": "Límite de gasto (€, opcional)",
+  "nameHint": "p. ex. Alimentación",
+  "limitHint": "p. ex. 300",
+  "nameRequired": "O nome é obrigatorio",
+  "enterPositiveNumber": "Introduce un número positivo",
+  "colorLabel": "Cor",
+  "iconLabel": "Icona",
+  "saveChanges": "Gardar cambios",
+  "create": "Crear",
+
+  "allFilter": "Todos",
+  "filterByDate": "Filtrar por data",
+  "clearFilters": "Quitar filtros",
+  "noExpensesMatchFilter": "Ningún gasto coincide co filtro",
+  "tryAdjustingFilter": "Proba a axustar a categoría ou o rango de datas.",
+
+  "statisticsTitle": "Estatísticas",
+  "last6Months": "Últimos 6 meses",
+  "topCategories": "Principais categorías",
+  "categoryBreakdown": "Desglose por categoría",
+  "noSpendingData": "Sen datos de gasto nos últimos 6 meses",
+  "noExpensesThisMonth": "Non se rexistraron gastos este mes.",
+  "expenseCount": "{count, plural, =1{1 gasto} other{{count} gastos}}",
+
+  "language": "Idioma",
+  "languageSystem": "Idioma do sistema",
+  "languageEnglish": "Inglés",
+  "languageSpanish": "Español",
+  "languageGalician": "Galego",
+
+  "notificationAccessTitle": "Acceso a notificacións",
+  "notificationAccessContent": "Nudget le as túas notificacións de pago para rexistrar gastos automaticamente. Concede \"Acceso a notificacións\" na seguinte pantalla para activar esta función.\n\nAínda podes engadir gastos manualmente sen este permiso.",
+  "notNow": "Agora non",
+  "allow": "Permitir",
+
+  "failedToSaveCategory": "Erro ao gardar a categoría: {error}",
+  "failedToDeleteCategory": "Erro ao eliminar a categoría: {error}",
+  "failedToDelete": "Erro ao eliminar: {error}",
+  "failedToSave": "Erro ao gardar: {error}",
+  "failedToClassify": "Erro ao clasificar: {error}",
+
+  "couldNotLoadExpenses": "Non se puideron cargar os gastos",
+  "couldNotLoadPendingExpenses": "Non se puideron cargar os gastos pendentes",
+  "couldNotLoadCategories": "Non se puideron cargar as categorías"
+}
