@@ -4,10 +4,18 @@
 *.log
 *.pyc
 *.swp
+.atom/
 .buildlog/
 .history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
 
 # Flutter repo-specific
 /bin/cache/
@@ -38,6 +46,7 @@ analysis_benchmark.json
 .flutter-plugins-dependencies
 **/generated_plugin_registrant.dart
 .packages
+.pub-cache/
 .pub-preload-cache/
 .pub/
 build/
@@ -47,6 +56,9 @@ unlinked.ds
 unlinked_spec.ds
 
 # Android related
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
 **/android/**/gradle-wrapper.jar
 .gradle/
 **/android/captures/
