@@ -121,7 +121,7 @@ class _AllExpensesSheet extends ConsumerWidget {
 // ---------------------------------------------------------------------------
 
 class _ExpenseRow extends ConsumerWidget {
-  const _ExpenseRow({required this.expense, super.key});
+  const _ExpenseRow({required this.expense});
 
   final Expense expense;
 

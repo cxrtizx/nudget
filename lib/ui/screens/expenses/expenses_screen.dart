@@ -6,6 +6,7 @@ import 'package:nudget/core/models/expense.dart';
 import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/expense_providers.dart';
+import 'package:nudget/ui/screens/expenses/create_expense_sheet.dart';
 import 'package:nudget/ui/screens/expenses/expense_detail_sheet.dart';
 import 'package:nudget/ui/widgets/expense_list_item.dart';
 
@@ -77,6 +78,11 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => showCreateExpenseSheet(context),
+        icon: const Icon(Icons.add),
+        label: Text(l10n.addExpense),
+      ),
       body: Column(
         children: [
           if (_dateRange != null)
@@ -142,8 +148,67 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen> {
       firstDate: DateTime(now.year - 3),
       lastDate: now,
       initialDateRange: _dateRange,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      builder: (dialogCtx, child) {
+        final tooltip = context.l10n.filterByDate;
+        final iconColor =
+            Theme.of(dialogCtx).colorScheme.onSurfaceVariant;
+        final topOffset =
+            MediaQuery.of(dialogCtx).padding.top + kToolbarHeight + 8;
+        return Stack(
+          children: [
+            child!,
+            // Overlay the edit button at the exact position where the native
+            // pencil appears in calendar mode (right side of the helpText row,
+            // which sits inside the AppBar bottom PreferredSize of 64 px).
+            Positioned(
+              top: topOffset,
+              right: 0,
+              child: Material(
+                color: Colors.transparent,
+                child: IconButton(
+                  icon: const Icon(Icons.edit_outlined),
+                  color: iconColor,
+                  tooltip: tooltip,
+                  onPressed: () async {
+                    Navigator.of(dialogCtx).pop();
+                    if (!mounted) return;
+                    await _openManualDatePicker();
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
     if (picked != null) setState(() => _dateRange = picked);
+  }
+
+  Future<void> _openManualDatePicker() async {
+    final now = DateTime.now();
+    final threeYearsAgo = DateTime(now.year - 3);
+
+    final start = await showDatePicker(
+      context: context,
+      initialDate: _dateRange?.start ?? now,
+      firstDate: threeYearsAgo,
+      lastDate: _dateRange?.end ?? now,
+    );
+    if (start == null || !mounted) return;
+
+    final end = await showDatePicker(
+      context: context,
+      initialDate:
+          (_dateRange?.end != null && !_dateRange!.end.isBefore(start))
+              ? _dateRange!.end
+              : start,
+      firstDate: start,
+      lastDate: now,
+    );
+    if (end == null || !mounted) return;
+
+    setState(() => _dateRange = DateTimeRange(start: start, end: end));
   }
 
   Future<void> _openDetail(BuildContext context, Expense expense) async {
@@ -405,3 +470,4 @@ class _ErrorView extends StatelessWidget {
     );
   }
 }
+

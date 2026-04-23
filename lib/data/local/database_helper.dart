@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nudget/core/utils/logger.dart';
 import 'package:nudget/data/migrations/schema_v1.dart';
+import 'package:nudget/data/migrations/schema_v2.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
@@ -53,7 +54,7 @@ class DatabaseHelper {
 
     return openDatabase(
       path,
-      version: SchemaV1.version,
+      version: SchemaV2.version,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
@@ -75,6 +76,7 @@ class DatabaseHelper {
     await db.execute(SchemaV1.createExpensesCategoryIndex);
     await db.execute(SchemaV1.createExpensesDateIndex);
     await db.execute(SchemaV1.createRulesMatchCountIndex);
+    await db.execute(SchemaV2.createNotificationSourcesTable);
 
     await _insertSeedCategories(db);
   }
@@ -83,7 +85,9 @@ class DatabaseHelper {
   /// for each version bump; never mutate existing case blocks.
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     _log.info('Upgrading schema from v$oldVersion to v$newVersion');
-    // v1 → v2: add statements here when needed.
+    if (oldVersion < 2) {
+      await db.execute(SchemaV2.createNotificationSourcesTable);
+    }
   }
 
   /// Inserts the five built-in categories on first launch.

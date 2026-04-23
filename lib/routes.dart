@@ -5,6 +5,8 @@ import 'package:nudget/ui/screens/categories/categories_screen.dart';
 import 'package:nudget/ui/screens/dashboard/dashboard_screen.dart';
 import 'package:nudget/ui/screens/expenses/expenses_screen.dart';
 import 'package:nudget/ui/screens/pending/pending_screen.dart';
+import 'package:nudget/ui/screens/settings/notification_sources_screen.dart';
+import 'package:nudget/ui/screens/settings/settings_screen.dart';
 import 'package:nudget/ui/screens/statistics/statistics_screen.dart';
 
 /// Route path constants.
@@ -23,6 +25,14 @@ const kRoutePending = '/pending';
 
 /// Route path for the statistics screen.
 const kRouteStatistics = '/statistics';
+
+/// Route path for the settings screen.
+///
+/// Pushed on top of the shell; not a bottom-nav tab.
+const kRouteSettings = '/settings';
+
+/// Route path for the notification sources configuration screen.
+const kRouteNotificationSources = '/settings/sources';
 
 /// Ordered list of paths that correspond to bottom-navigation tabs.
 const _tabRoutes = [
@@ -68,6 +78,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: kRoutePending,
       builder: (context, state) => const PendingScreen(),
+    ),
+    // Settings is a push-only route — no bottom nav tab.
+    GoRoute(
+      path: kRouteSettings,
+      builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: kRouteNotificationSources,
+      builder: (context, state) => const NotificationSourcesScreen(),
     ),
   ],
 );

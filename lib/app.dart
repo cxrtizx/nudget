@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nudget/l10n/app_localizations.dart';
 import 'package:nudget/providers/locale_provider.dart';
 import 'package:nudget/providers/notification_providers.dart';
+import 'package:nudget/providers/theme_provider.dart';
 import 'package:nudget/routes.dart';
 import 'package:nudget/ui/theme/app_theme.dart';
 
@@ -37,11 +38,15 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
 
     // Read the persisted locale; null means "follow the system".
     final locale = ref.watch(localeProvider).whenOrNull(data: (l) => l);
+    final themeMode =
+        ref.watch(themeModeProvider).whenOrNull(data: (m) => m) ??
+            ThemeMode.system;
 
     return MaterialApp.router(
       title: 'Nudget',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       // ── Localisation wiring ────────────────────────────────────────────
@@ -73,8 +78,12 @@ class _NudgetAppState extends ConsumerState<NudgetApp> {
     }
 
     if (!mounted) return;
+    // NudgetApp's own context sits above MaterialApp.router, so it has no
+    // MaterialLocalizations. Use the router navigator's context instead.
+    final navContext = appRouter.routerDelegate.navigatorKey.currentContext;
+    if (navContext == null || !navContext.mounted) return;
     final accepted = await showDialog<bool>(
-      context: context,
+      context: navContext,
       barrierDismissible: false,
       builder: (_) => const _NotificationPermissionDialog(),
     );

@@ -129,6 +129,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classify => 'Classify';
 
   @override
+  String get addExpense => 'Add expense';
+
+  @override
+  String get newExpense => 'New expense';
+
+  @override
   String get addCategory => 'Add category';
 
   @override
@@ -180,6 +186,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterByDate => 'Filter by date';
 
   @override
+  String get startDate => 'Start date';
+
+  @override
+  String get endDate => 'End date';
+
+  @override
   String get clearFilters => 'Clear filters';
 
   @override
@@ -216,6 +228,105 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get notificationSourcesTitle => 'Notification sources';
+
+  @override
+  String get addNotificationSource => 'Add source';
+
+  @override
+  String get newNotificationSource => 'New source';
+
+  @override
+  String get editNotificationSource => 'Edit source';
+
+  @override
+  String get appNameLabel => 'App name';
+
+  @override
+  String get patternLabel => 'Pattern';
+
+  @override
+  String patternHint(String importe, String concepto) {
+    return 'e.g. Pago de $importe€ en $concepto';
+  }
+
+  @override
+  String patternRequiresAmount(String importe) {
+    return 'Pattern must include $importe';
+  }
+
+  @override
+  String get testPatternLabel => 'Test notification';
+
+  @override
+  String get testPatternHint => 'Paste a sample notification…';
+
+  @override
+  String patternMatchAmount(String amount) {
+    return 'Amount: $amount';
+  }
+
+  @override
+  String patternMatchMerchant(String merchant) {
+    return 'Merchant: $merchant';
+  }
+
+  @override
+  String get patternNoMatch => 'Pattern does not match';
+
+  @override
+  String get enabledLabel => 'Active';
+
+  @override
+  String get selectFromRecent => 'Recent apps';
+
+  @override
+  String get noNotificationSources => 'No sources configured yet';
+
+  @override
+  String get automationSection => 'Automation';
+
+  @override
+  String failedToSaveSource(String error) {
+    return 'Failed to save source: $error';
+  }
+
+  @override
+  String failedToDeleteSource(String error) {
+    return 'Failed to delete source: $error';
+  }
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get profileSection => 'Profile';
+
+  @override
+  String get editProfileName => 'Name';
+
+  @override
+  String get appearanceSection => 'Appearance';
+
+  @override
+  String get themeLabel => 'Theme';
+
+  @override
+  String get themeSystem => 'System default';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get notificationsSection => 'Notifications';
+
+  @override
+  String get manageNotificationAccess => 'Manage access';
 
   @override
   String get language => 'Language';

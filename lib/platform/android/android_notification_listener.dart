@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_notification_listener/flutter_notification_listener.dart';
 import 'package:nudget/core/services/i_notification_listener_service.dart';
 import 'package:nudget/core/utils/logger.dart';
+import 'package:nudget/platform/android/background_notification_handler.dart';
 
 /// Android implementation of [INotificationListenerService].
 ///
@@ -12,8 +11,7 @@ import 'package:nudget/core/utils/logger.dart';
 /// `NotificationListenerService` in the Android system and keeps it alive via
 /// a foreground service (configured in `AndroidManifest.xml`).
 ///
-/// This class must only be instantiated on Android — gate construction with
-/// [Platform.isAndroid].
+/// This class must only be instantiated on Android.
 class AndroidNotificationListener implements INotificationListenerService {
   /// Creates an [AndroidNotificationListener] and wires up the platform stream.
   AndroidNotificationListener() {
@@ -24,6 +22,8 @@ class AndroidNotificationListener implements INotificationListenerService {
 
   final StreamController<RawNotificationData> _controller =
       StreamController<RawNotificationData>.broadcast();
+
+  StreamSubscription<dynamic>? _portSubscription;
 
   @override
   Stream<RawNotificationData> get notificationStream => _controller.stream;
@@ -48,13 +48,12 @@ class AndroidNotificationListener implements INotificationListenerService {
   }
 
   /// Starts the foreground notification listener service.
+  @override
   Future<void> startListening() async {
     try {
       await NotificationsListener.startService(
-        foreground: true,
         title: 'Nudget',
         description: 'Listening for payment notifications',
-        showWhen: false,
       );
       _log.info('Notification listener service started');
     } catch (e, st) {
@@ -63,6 +62,7 @@ class AndroidNotificationListener implements INotificationListenerService {
   }
 
   /// Stops the foreground notification listener service.
+  @override
   Future<void> stopListening() async {
     try {
       await NotificationsListener.stopService();
@@ -72,31 +72,47 @@ class AndroidNotificationListener implements INotificationListenerService {
     }
   }
 
-  /// Closes the internal stream. Call when the app is terminating.
-  void dispose() => _controller.close();
+  /// Closes the internal stream and port subscription.
+  void dispose() {
+    _portSubscription?.cancel();
+    _controller.close();
+  }
 
   // ---------------------------------------------------------------------------
   // Private helpers
   // ---------------------------------------------------------------------------
 
   void _initStream() {
-    NotificationsListener.initialize(callbackHandle: _onNotificationReceived);
+    // Register backgroundNotificationHandler as the unified callback:
+    //   • Main isolate alive → callback routes event to this receivePort.
+    //   • Main isolate gone  → callback writes directly to SQLite.
+    NotificationsListener.initialize(
+      callbackHandle: backgroundNotificationHandler,
+    );
+
+    // Subscribe to the named receive port so events routed from the callback
+    // reach the stream and are processed by notificationPipelineProvider.
+    _portSubscription = NotificationsListener.receivePort!.listen(
+      (dynamic raw) {
+        if (raw is! NotificationEvent) return;
+        _controller.add(_toRawData(raw));
+      },
+      onError: (Object e, StackTrace st) =>
+          _log.error('receivePort error', e, st),
+    );
+
     _log.info('AndroidNotificationListener initialized');
   }
 
-  // Top-level or static — required by flutter_notification_listener's isolate.
-  static void _onNotificationReceived(NotificationEvent event) {
-    // This callback may fire in a background isolate; routing via a port is
-    // handled internally by flutter_notification_listener. The stream
-    // subscription below receives events on the main isolate.
+  RawNotificationData _toRawData(NotificationEvent event) {
+    return RawNotificationData(
+      packageName: event.packageName ?? '',
+      // Human-readable app name is not resolvable in Dart without a platform
+      // channel call; use package name as the matching key for now.
+      appName: event.packageName ?? '',
+      title: event.title ?? '',
+      body: event.text ?? '',
+      timestamp: event.createAt ?? DateTime.now(),
+    );
   }
-}
-
-/// Registers the top-level notification callback used by the background isolate.
-///
-/// Must be called from [main] before [runApp].
-void initAndroidNotificationListener(
-  void Function(NotificationEvent) handler,
-) {
-  NotificationsListener.initialize(callbackHandle: handler);
 }

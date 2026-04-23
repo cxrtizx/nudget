@@ -9,6 +9,7 @@ import 'package:nudget/platform/android/android_notification_listener.dart';
 import 'package:nudget/platform/ios/ios_notification_listener.dart';
 import 'package:nudget/providers/classification_service_provider.dart';
 import 'package:nudget/providers/expense_providers.dart';
+import 'package:nudget/providers/notification_source_providers.dart';
 import 'package:nudget/providers/repository_providers.dart';
 import 'package:uuid/uuid.dart';
 
@@ -49,7 +50,20 @@ final notificationPipelineProvider = Provider<void>((ref) {
 
   final subscription = listener.notificationStream.listen(
     (notification) async {
-      final parsed =
+      // Check for a user-configured source pattern first.
+      final sources =
+          ref.read(notificationSourceListProvider).whenOrNull(data: (l) => l) ??
+              [];
+      final matchedSource = sources
+          .where(
+            (s) => s.isEnabled && s.appName == notification.appName,
+          )
+          .firstOrNull;
+
+      final parsed = matchedSource?.parse(
+            notification.body,
+            source: notification.appName,
+          ) ??
           parser.parse(notification.body, source: notification.appName);
       final now = DateTime.now().toUtc();
 

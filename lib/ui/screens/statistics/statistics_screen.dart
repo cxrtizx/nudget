@@ -8,7 +8,6 @@ import 'package:nudget/core/utils/l10n_extension.dart';
 import 'package:nudget/providers/category_providers.dart';
 import 'package:nudget/providers/dashboard_providers.dart';
 import 'package:nudget/providers/statistics_providers.dart';
-import 'package:nudget/ui/widgets/language_selector_dialog.dart';
 
 /// Displays a month-over-month bar chart for the last six months and a
 /// per-category spending breakdown for the selected month.
@@ -40,14 +39,6 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.statisticsTitle),
-        actions: [
-          // Language selector — accessible from here as a settings-like action.
-          IconButton(
-            icon: const Icon(Icons.translate),
-            tooltip: l10n.language,
-            onPressed: () => showLanguageSelectorSheet(context),
-          ),
-        ],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),

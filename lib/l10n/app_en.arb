@@ -54,6 +54,9 @@
   "classifyAndSaveRule": "Classify & save rule",
   "classify": "Classify",
 
+  "addExpense": "Add expense",
+  "newExpense": "New expense",
+
   "addCategory": "Add category",
   "noCategories": "No categories yet",
   "tapToCreateCategory": "Tap + to create your first category.",
@@ -72,6 +75,8 @@
 
   "allFilter": "All",
   "filterByDate": "Filter by date",
+  "startDate": "Start date",
+  "endDate": "End date",
   "clearFilters": "Clear filters",
   "noExpensesMatchFilter": "No expenses match the filter",
   "tryAdjustingFilter": "Try adjusting the category or date range.",
@@ -88,6 +93,58 @@
       "count": { "type": "int" }
     }
   },
+
+  "notificationSourcesTitle": "Notification sources",
+  "addNotificationSource": "Add source",
+  "newNotificationSource": "New source",
+  "editNotificationSource": "Edit source",
+  "appNameLabel": "App name",
+  "patternLabel": "Pattern",
+  "patternHint": "e.g. Pago de {importe}€ en {concepto}",
+  "@patternHint": {
+    "placeholders": {
+      "importe": { "type": "String" },
+      "concepto": { "type": "String" }
+    }
+  },
+  "patternRequiresAmount": "Pattern must include {importe}",
+  "@patternRequiresAmount": {
+    "placeholders": { "importe": { "type": "String" } }
+  },
+  "testPatternLabel": "Test notification",
+  "testPatternHint": "Paste a sample notification…",
+  "patternMatchAmount": "Amount: {amount}",
+  "@patternMatchAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "patternMatchMerchant": "Merchant: {merchant}",
+  "@patternMatchMerchant": {
+    "placeholders": { "merchant": { "type": "String" } }
+  },
+  "patternNoMatch": "Pattern does not match",
+  "enabledLabel": "Active",
+  "selectFromRecent": "Recent apps",
+  "noNotificationSources": "No sources configured yet",
+  "automationSection": "Automation",
+  "failedToSaveSource": "Failed to save source: {error}",
+  "@failedToSaveSource": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "failedToDeleteSource": "Failed to delete source: {error}",
+  "@failedToDeleteSource": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "settingsTitle": "Settings",
+  "profileSection": "Profile",
+  "editProfileName": "Name",
+  "appearanceSection": "Appearance",
+  "themeLabel": "Theme",
+  "themeSystem": "System default",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "notificationsSection": "Notifications",
+  "manageNotificationAccess": "Manage access",
 
   "language": "Language",
   "languageSystem": "System default",

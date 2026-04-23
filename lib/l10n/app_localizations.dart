@@ -334,6 +334,18 @@ abstract class AppLocalizations {
   /// **'Classify'**
   String get classify;
 
+  /// No description provided for @addExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Add expense'**
+  String get addExpense;
+
+  /// No description provided for @newExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'New expense'**
+  String get newExpense;
+
   /// No description provided for @addCategory.
   ///
   /// In en, this message translates to:
@@ -436,6 +448,18 @@ abstract class AppLocalizations {
   /// **'Filter by date'**
   String get filterByDate;
 
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End date'**
+  String get endDate;
+
   /// No description provided for @clearFilters.
   ///
   /// In en, this message translates to:
@@ -495,6 +519,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 expense} other{{count} expenses}}'**
   String expenseCount(int count);
+
+  /// No description provided for @notificationSourcesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification sources'**
+  String get notificationSourcesTitle;
+
+  /// No description provided for @addNotificationSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Add source'**
+  String get addNotificationSource;
+
+  /// No description provided for @newNotificationSource.
+  ///
+  /// In en, this message translates to:
+  /// **'New source'**
+  String get newNotificationSource;
+
+  /// No description provided for @editNotificationSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit source'**
+  String get editNotificationSource;
+
+  /// No description provided for @appNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App name'**
+  String get appNameLabel;
+
+  /// No description provided for @patternLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get patternLabel;
+
+  /// No description provided for @patternHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Pago de {importe}€ en {concepto}'**
+  String patternHint(String importe, String concepto);
+
+  /// No description provided for @patternRequiresAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern must include {importe}'**
+  String patternRequiresAmount(String importe);
+
+  /// No description provided for @testPatternLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notification'**
+  String get testPatternLabel;
+
+  /// No description provided for @testPatternHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a sample notification…'**
+  String get testPatternHint;
+
+  /// No description provided for @patternMatchAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount: {amount}'**
+  String patternMatchAmount(String amount);
+
+  /// No description provided for @patternMatchMerchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant: {merchant}'**
+  String patternMatchMerchant(String merchant);
+
+  /// No description provided for @patternNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern does not match'**
+  String get patternNoMatch;
+
+  /// No description provided for @enabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get enabledLabel;
+
+  /// No description provided for @selectFromRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent apps'**
+  String get selectFromRecent;
+
+  /// No description provided for @noNotificationSources.
+  ///
+  /// In en, this message translates to:
+  /// **'No sources configured yet'**
+  String get noNotificationSources;
+
+  /// No description provided for @automationSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Automation'**
+  String get automationSection;
+
+  /// No description provided for @failedToSaveSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save source: {error}'**
+  String failedToSaveSource(String error);
+
+  /// No description provided for @failedToDeleteSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete source: {error}'**
+  String failedToDeleteSource(String error);
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @profileSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileSection;
+
+  /// No description provided for @editProfileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get editProfileName;
+
+  /// No description provided for @appearanceSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceSection;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeLabel;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @notificationsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSection;
+
+  /// No description provided for @manageNotificationAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage access'**
+  String get manageNotificationAccess;
 
   /// No description provided for @language.
   ///

@@ -129,6 +129,12 @@ class AppLocalizationsGl extends AppLocalizations {
   String get classify => 'Clasificar';
 
   @override
+  String get addExpense => 'Engadir gasto';
+
+  @override
+  String get newExpense => 'Novo gasto';
+
+  @override
   String get addCategory => 'Engadir categoría';
 
   @override
@@ -181,6 +187,12 @@ class AppLocalizationsGl extends AppLocalizations {
   String get filterByDate => 'Filtrar por data';
 
   @override
+  String get startDate => 'Data de inicio';
+
+  @override
+  String get endDate => 'Data de fin';
+
+  @override
   String get clearFilters => 'Quitar filtros';
 
   @override
@@ -218,6 +230,105 @@ class AppLocalizationsGl extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get notificationSourcesTitle => 'Fontes de notificación';
+
+  @override
+  String get addNotificationSource => 'Engadir fonte';
+
+  @override
+  String get newNotificationSource => 'Nova fonte';
+
+  @override
+  String get editNotificationSource => 'Editar fonte';
+
+  @override
+  String get appNameLabel => 'Nome da app';
+
+  @override
+  String get patternLabel => 'Padrón';
+
+  @override
+  String patternHint(String importe, String concepto) {
+    return 'p. ex. Pago de $importe€ en $concepto';
+  }
+
+  @override
+  String patternRequiresAmount(String importe) {
+    return 'O padrón debe incluír $importe';
+  }
+
+  @override
+  String get testPatternLabel => 'Probar notificación';
+
+  @override
+  String get testPatternHint => 'Pega unha notificación de exemplo…';
+
+  @override
+  String patternMatchAmount(String amount) {
+    return 'Importe: $amount';
+  }
+
+  @override
+  String patternMatchMerchant(String merchant) {
+    return 'Comercio: $merchant';
+  }
+
+  @override
+  String get patternNoMatch => 'O padrón non coincide';
+
+  @override
+  String get enabledLabel => 'Activo';
+
+  @override
+  String get selectFromRecent => 'Apps recentes';
+
+  @override
+  String get noNotificationSources => 'Aínda non hai fontes configuradas';
+
+  @override
+  String get automationSection => 'Automatización';
+
+  @override
+  String failedToSaveSource(String error) {
+    return 'Erro ao gardar a fonte: $error';
+  }
+
+  @override
+  String failedToDeleteSource(String error) {
+    return 'Erro ao eliminar a fonte: $error';
+  }
+
+  @override
+  String get settingsTitle => 'Configuración';
+
+  @override
+  String get profileSection => 'Perfil';
+
+  @override
+  String get editProfileName => 'Nome';
+
+  @override
+  String get appearanceSection => 'Aparencia';
+
+  @override
+  String get themeLabel => 'Tema';
+
+  @override
+  String get themeSystem => 'Predeterminado do sistema';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Escuro';
+
+  @override
+  String get notificationsSection => 'Notificacións';
+
+  @override
+  String get manageNotificationAccess => 'Xestionar acceso';
 
   @override
   String get language => 'Idioma';
